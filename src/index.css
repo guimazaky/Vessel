@@ -2,6 +2,14 @@
   font-family: GFS Didot;
   src: url("../src/assets/fonts/GFSDidot-Regular.ttf");
 }
+@font-face {
+  font-family: Inter;
+  src: url("../src/assets/fonts/Inter_18pt-Regular.ttf");
+}
+@font-face {
+  font-family: LexendDeca;
+  src: url("../src/assets/fonts/LexendDeca-Regular.ttf");
+}
 
 @import "tailwindcss";
 
@@ -13,4 +21,6 @@ body {
 
 @theme {
   --font-didot: GFS Didot, "serif";
+  --font-inter: Inter;
+  --font-lexend: LexendDeca;
 }
