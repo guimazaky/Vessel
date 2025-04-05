@@ -10,7 +10,10 @@ function Home() {
 
       <div className="flex-1 content-center place-items-center  ">
         <h1 className="w-200 text-center font-didot text-white text-7xl">
-          Managing your money easily, fast and smart.
+          Managing your money{" "}
+          <h1 className="bg-gradient-to-r from-[#FC4B08] to-[#2C02C5] bg-clip-text text-transparent ">
+            easily, fast and smart.
+          </h1>
         </h1>
         <Button
           variant="default"
