@@ -2,8 +2,11 @@ import { Button } from "@/components/ui/button";
 import Footer from "@/components/ui/footer";
 import Navbar from "@/components/ui/navbar";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
+  const navigate = useNavigate();
+
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
@@ -18,6 +21,7 @@ function Home() {
         <Button
           variant="default"
           className="mt-28 w-36 h-12 text-3xl text-white font-lexend"
+          onClick={() => navigate("/loginpage")}
         >
           Start
         </Button>
