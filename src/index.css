@@ -1,0 +1,16 @@
+@font-face {
+  font-family: GFS Didot;
+  src: url("../src/assets/fonts/GFSDidot-Regular.ttf");
+}
+
+@import "tailwindcss";
+
+body {
+  margin: 0;
+  background: radial-gradient(at 50% 0%, #15015f 0%, #000000 90%);
+  min-height: 100vh;
+}
+
+@theme {
+  --font-didot: GFS Didot, "serif";
+}
