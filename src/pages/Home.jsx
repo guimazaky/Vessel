@@ -9,15 +9,15 @@ function Home() {
       <Navbar />
 
       <div className="flex-1 content-center place-items-center  ">
-        <h1 className="w-200 text-center font-didot text-white text-7xl">
+        <h1 className="w-200 text-center font-lexend text-white text-7xl">
           Managing your money{" "}
-          <h1 className="bg-gradient-to-r from-[#FC4B08] to-[#2C02C5] bg-clip-text text-transparent ">
+          <h1 className="font-didot bg-gradient-to-r from-[#FC4B08] to-[#2C02C5] bg-clip-text text-transparent ">
             easily, fast and smart.
           </h1>
         </h1>
         <Button
           variant="default"
-          className="mt-28 w-36 h-12 text-3xl text-white "
+          className="mt-28 w-36 h-12 text-3xl text-white font-lexend"
         >
           Start
         </Button>
