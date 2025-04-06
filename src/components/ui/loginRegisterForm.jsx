@@ -20,7 +20,7 @@ function LoginRegisterForm() {
         />
         <Button>Submit</Button>
         <Button variant="google" className="w-20">
-          <img src="public/google.png" alt="" className="h-5" />
+          <img src="/google.png" alt="Google" className="h-5" />
         </Button>
       </div>
       <div className="flex flex-col justify-center flex-1 h-136 w-120 bg-transparent border-1 border-white/50 rounded-2xl items-center font-lexend gap-12">
