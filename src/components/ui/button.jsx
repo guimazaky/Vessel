@@ -10,7 +10,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-[#FC4B08]/70 rounded-full text-white shadow-xs hover:bg-[#15015F] cursor-pointer font-lexend",
+          "bg-[#FC4B08]/70 rounded-full text-white shadow-xs hover:bg-[#7d9dff] cursor-pointer font-lexend",
         destructive:
           "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
         outline:
