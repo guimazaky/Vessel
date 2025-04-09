@@ -50,7 +50,7 @@ function LoginRegisterForm() {
       </div>
 
       <div
-        className={`absolute top-0 w-1/2 h-full bg-radial-[at_50%_50%]  from-[#15015f] to-black backdrop-blur-md border-l border-white/20 transition-all duration-500 ease-in-out z-10 flex flex-col items-center justify-center gap-8 ${
+        className={`absolute top-0 w-1/2 h-full bg-radial-[at_50%_0%] from-[#15015f] to-black to-120% backdrop-blur-md border-l border-white/20 rounded-4xl transition-all duration-500 ease-in-out z-10 flex flex-col items-center justify-center gap-8 ${
           isRegistering ? "translate-x-full" : "translate-x-0"
         }`}
       >

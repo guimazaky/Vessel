@@ -4,6 +4,7 @@ import ReactDOM from "react-dom/client";
 import LoadingPage from "./pages/LoadingPage";
 import Home from "./pages/Home";
 import LoginPage from "./pages/LoginPage";
+import UserResults from "./pages/UserResults";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <Router>
@@ -11,6 +12,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <Route path="/" element={<LoadingPage />} />
       <Route path="/home" element={<Home />} />
       <Route path="/loginpage" element={<LoginPage />} />
+      <Route path="/userresults" element={<UserResults />} />
     </Routes>
   </Router>
 );

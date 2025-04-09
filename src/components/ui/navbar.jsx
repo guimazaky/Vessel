@@ -11,7 +11,7 @@ function Navbar() {
       <a className="text-white font-didot text-5xl" href="/home">
         Vessel
       </a>
-      <div className="text-white  mr-12 flex gap-8">
+      <div className="text-white  mr-12 flex gap-8 items-center">
         <Button
           variant="default"
           className=" w-20 h-8 text-1xl text-white font-lexend"
@@ -21,7 +21,7 @@ function Navbar() {
         </Button>
 
         <a href="">
-          <CircleUserRound className="w-8 h-8" />
+          <CircleUserRound className="w-12 h-12" />
         </a>
       </div>
     </div>
