@@ -17,6 +17,7 @@ body {
   margin: 0;
   background: radial-gradient(at 50% 0%, #15015f 0%, #000000 90%);
   min-height: 100vh;
+  color: white;
 }
 
 @theme {
