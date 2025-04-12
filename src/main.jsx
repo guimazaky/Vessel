@@ -12,7 +12,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <Route path="/" element={<LoadingPage />} />
       <Route path="/home" element={<Home />} />
       <Route path="/loginpage" element={<LoginPage />} />
-      <Route path="/userresults" element={<UserResults />} />
+      <Route path="/user_results" element={<UserResults />} />
     </Routes>
   </Router>
 );

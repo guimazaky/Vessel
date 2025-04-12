@@ -5,6 +5,8 @@ import BalanceCard from "@/components/ui/balanceCard";
 import MonthCard from "@/components/ui/monthCard";
 import ExpensesCard from "@/components/ui/expensesCard";
 
+import BarChart from "@/components/ui/BarChartCard";
+
 function UserResults() {
   return (
     <div className="flex flex-col min-h-screen">
@@ -17,7 +19,9 @@ function UserResults() {
         <div className="border-2 border-white/25 rounded-xl h-160 w-120">
           <ExpensesCard />
         </div>
-        <div className="border-2 border-white/25 rounded-xl h-160 w-120"></div>
+        <div className="border-2 border-white/25 rounded-xl h-160 w-120 flex items-center justify-center ">
+          <BarChart className="" />
+        </div>
       </div>
       <Footer />
     </div>
