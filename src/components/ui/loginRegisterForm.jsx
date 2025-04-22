@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { auth, googleProvider } from "../../config/firebase";
-import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+} from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { Navigate } from "react-router-dom";
 
 function LoginRegisterForm() {
   const navigate = useNavigate();
@@ -15,6 +18,16 @@ function LoginRegisterForm() {
     try {
       setError("");
       await createUserWithEmailAndPassword(auth, email, password);
+      navigate("/user_results");
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  const login = async () => {
+    try {
+      setError("");
+      await signInWithEmailAndPassword(auth, email, password);
       navigate("/user_results");
     } catch (err) {
       setError(err.message);
@@ -40,15 +53,29 @@ function LoginRegisterForm() {
             type="email"
             placeholder="Email"
             className=" border-b border-white/50 bg-transparent outline-none px-2 py-1"
+            onChange={(e) => setEmail(e.target.value)}
           />
           <input
             type="password"
             placeholder="Password"
             className=" border-b border-white/50 bg-transparent outline-none px-2 py-1"
+            onChange={(e) => setPassword(e.target.value)}
           />
-          <Button className="mt-2 w-20">Login</Button>
+          <Button className="mt-2 w-20" onClick={login}>
+            Login
+          </Button>
+          {error && (
+            <p className="text-red-400 text-sm mt-2 text-center max-w-[80%]">
+              {error}
+            </p>
+          )}
           <Button variant="google" className="w-20">
-            <img src="/google.png" alt="Google" className="h-5" />
+            <img
+              src="/google.png"
+              alt="Google"
+              className="h-5"
+              onClick={singInWithGoogle}
+            />
           </Button>
         </div>
 

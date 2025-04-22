@@ -2,9 +2,19 @@ import { Button } from "@/components/ui/button";
 import Footer from "@/components/ui/footer";
 import Navbar from "@/components/ui/navbar";
 import React from "react";
+import { setPersistence, browserSessionPersistence } from "firebase/auth";
+import { auth } from "../config/firebase";
 import { useNavigate } from "react-router-dom";
 
 function Home() {
+  setPersistence(auth, browserSessionPersistence)
+    .then(() => {
+      console.log("Persistência de sessão configurada.");
+    })
+    .catch((error) => {
+      console.error("Erro ao definir persistência:", error);
+    });
+
   const navigate = useNavigate();
 
   return (
@@ -14,9 +24,9 @@ function Home() {
       <div className="flex-1 content-center place-items-center  ">
         <h1 className="w-200 text-center font-lexend text-white text-7xl">
           Managing your money{" "}
-          <h1 className="font-didot bg-linear-to-r from-[#FC4B08]  to-[#2C02C5] bg-clip-text text-transparent leading-[1.75]">
+          <p className="font-didot bg-linear-to-r from-[#FC4B08]  to-[#2C02C5] bg-clip-text text-transparent leading-[1.75]">
             easily, fast and smart.
-          </h1>
+          </p>
         </h1>
         <Button
           variant="default"
