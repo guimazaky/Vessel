@@ -1,8 +1,25 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { auth } from "../../config/firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 function LoginRegisterForm() {
+  const navigate = useNavigate();
   const [isRegistering, setIsRegistering] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const signIn = async () => {
+    try {
+      setError("");
+      await createUserWithEmailAndPassword(auth, email, password);
+      navigate("/user_results");
+    } catch (err) {
+      setError(err.message);
+    }
+  };
 
   return (
     <div className="relative w-240 h-136 overflow-hidden border border-white/50 rounded-2xl shadow-lg bg-transparent font-inter">
@@ -27,22 +44,27 @@ function LoginRegisterForm() {
 
         <div className="w-1/2 flex flex-col items-center justify-center gap-4 text-white px-4">
           <h2 className="text-3xl font-lexend">Register</h2>
-          <input
-            type="text"
-            placeholder="Name"
-            className=" border-b border-white/50 bg-transparent outline-none px-2 py-1"
-          />
+
           <input
             type="email"
             placeholder="Email"
             className=" border-b border-white/50 bg-transparent outline-none px-2 py-1"
+            onChange={(e) => setEmail(e.target.value)}
           />
           <input
             type="password"
             placeholder="Password"
             className=" border-b border-white/50 bg-transparent outline-none px-2 py-1"
+            onChange={(e) => setPassword(e.target.value)}
           />
-          <Button className="mt-2 w-20">Register</Button>
+          <Button className="mt-2 w-20" onClick={signIn}>
+            Register
+          </Button>
+          {error && (
+            <p className="text-red-400 text-sm mt-2 text-center max-w-[80%]">
+              {error}
+            </p>
+          )}
           <Button variant="google" className="w-20">
             <img src="/google.png" alt="Google" className="h-5" />
           </Button>

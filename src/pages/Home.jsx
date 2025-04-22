@@ -21,7 +21,7 @@ function Home() {
         <Button
           variant="default"
           className="mt-28 w-36 h-12 text-3xl text-white font-lexend"
-          onClick={() => navigate("/user_results")}
+          onClick={() => navigate("/loginpage")}
         >
           Start
         </Button>
