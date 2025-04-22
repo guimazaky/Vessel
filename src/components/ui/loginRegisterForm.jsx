@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { auth } from "../../config/firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth, googleProvider } from "../../config/firebase";
+import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 
@@ -15,6 +15,16 @@ function LoginRegisterForm() {
     try {
       setError("");
       await createUserWithEmailAndPassword(auth, email, password);
+      navigate("/user_results");
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  const singInWithGoogle = async () => {
+    try {
+      setError("");
+      await signInWithPopup(auth, googleProvider);
       navigate("/user_results");
     } catch (err) {
       setError(err.message);
@@ -65,7 +75,7 @@ function LoginRegisterForm() {
               {error}
             </p>
           )}
-          <Button variant="google" className="w-20">
+          <Button variant="google" className="w-20" onClick={singInWithGoogle}>
             <img src="/google.png" alt="Google" className="h-5" />
           </Button>
         </div>
