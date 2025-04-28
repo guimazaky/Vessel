@@ -66,7 +66,7 @@ const BarChart = () => {
   };
 
   return (
-    <div className="flex flex-col w-full text-center gap-4 items-center">
+    <div className="flex flex-col w-full h-full text-center gap-4 items-center justify-center bg-radial-[at_50%_-30%] from-[#15015f] to-[#000000] rounded-xl">
       <span className="text-4xl text-white/50 font-inter">Year:</span>
       <h1 className="text-5xl font-lexend">2025</h1>
       <ReactECharts option={option} style={{ height: "400px", width: "90%" }} />

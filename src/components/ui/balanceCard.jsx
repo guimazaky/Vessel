@@ -25,7 +25,7 @@ function BalanceCard() {
   }, []);
 
   return (
-    <div className="border-2 border-white/25 rounded-2xl h-64 flex justify-between bg-[#07001E]/25">
+    <div className="border-2 border-white/25 rounded-2xl h-64 flex justify-between bg-radial-[at_50%_-30%] from-[#15015f] to-[#000000]">
       <div className="flex flex-col justify-between m-4 ">
         <h1 className=" font-lexend text-4xl ">Your Balance:</h1>
         <div className="">
