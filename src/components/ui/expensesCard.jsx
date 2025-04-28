@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../../config/firebase";
-import { getDocs, collection } from "firebase/firestore";
+import { getDocs, collection, updateDoc, doc } from "firebase/firestore";
 import { Trash, Plus, Pencil } from "lucide-react";
 import { Button } from "./button";
 
 function ExpensesCard() {
   const [userList, setUserList] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const [newExpense, setNewExpense] = useState("");
+  const [newExpenseValue, setNewExpenseValue] = useState(0);
   const userCollectionRef = collection(db, "users");
 
   useEffect(() => {
@@ -25,6 +27,23 @@ function ExpensesCard() {
 
     getUserData();
   }, []);
+
+  const onSubmitExpense = async () => {
+    try {
+      const userId = "X5STyVp4rKFXDX3ZevUR"; // ID fixo do usuário que você quer atualizar
+      const userDocRef = doc(db, "users", userId);
+
+      await updateDoc(userDocRef, {
+        [`Expenses.${newExpense}`]: Number(newExpenseValue),
+      });
+
+      setShowForm(false); // Fecha o form
+      setNewExpense(""); // Limpa os inputs
+      setNewExpenseValue(0);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div className=" flex flex-col items-center justify-center h-full space-y-20 bg-radial-[at_50%_-30%] from-[#15015f] to-[#000000] rounded-2xl">
@@ -69,21 +88,22 @@ function ExpensesCard() {
         <div className="absolute top-2/6 left-1/2 transform -translate-x-1/2 w-120 h-80 bg-radial-[at_50%_-30%] from-[#15015f] to-[#000000] p-6 rounded-lg border-1 border-white/50">
           <h2 className="text-2xl font-bold mb-4">Add new Expense</h2>
           <input
+            onChange={(e) => setNewExpense(e.target.value)}
             type="text"
             placeholder="Name"
             className="border-2 border-gray-300 p-2 mb-4 w-full"
           />
           <input
+            onChange={(e) => setNewExpenseValue(e.target.value)}
             type="number"
             placeholder="Value"
             className="border-2 border-gray-300 p-2 mb-4 w-full"
           />
           <div className="flex justify-end gap-4">
             <Button className="bg-gray-400" onClick={() => setShowForm(false)}>
-              {" "}
-              Cancel{" "}
+              Cancel
             </Button>
-            <Button> Add </Button>
+            <Button onClick={onSubmitExpense}> Add </Button>
           </div>
         </div>
       )}
