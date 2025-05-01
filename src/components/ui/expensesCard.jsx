@@ -1,27 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../../config/firebase";
-import { getDocs, collection, updateDoc, doc } from "firebase/firestore";
+import { getDoc, doc, updateDoc } from "firebase/firestore";
 import { Trash, Plus, Pencil } from "lucide-react";
 import { Button } from "./button";
 
 function ExpensesCard() {
-  const [userList, setUserList] = useState([]);
+  const [expenses, setExpenses] = useState({});
   const [showForm, setShowForm] = useState(false);
   const [newExpense, setNewExpense] = useState("");
   const [newExpenseValue, setNewExpenseValue] = useState(0);
-  const userCollectionRef = collection(db, "users");
+  const userId = "X5STyVp4rKFXDX3ZevUR"; // ID fixo do usuário
+  const userDocRef = doc(db, "users", userId);
 
   useEffect(() => {
     const getUserData = async () => {
       try {
-        const data = await getDocs(userCollectionRef);
-        const filteredData = data.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        }));
-        setUserList(filteredData);
+        const docSnap = await getDoc(userDocRef);
+        if (docSnap.exists()) {
+          const userData = docSnap.data();
+          setExpenses(userData.Expenses || {});
+        }
       } catch (err) {
-        console.erro(err);
+        console.error("Erro ao buscar dados:", err);
       }
     };
 
@@ -30,15 +30,18 @@ function ExpensesCard() {
 
   const onSubmitExpense = async () => {
     try {
-      const userId = "X5STyVp4rKFXDX3ZevUR"; // ID fixo do usuário que você quer atualizar
-      const userDocRef = doc(db, "users", userId);
-
       await updateDoc(userDocRef, {
         [`Expenses.${newExpense}`]: Number(newExpenseValue),
       });
 
-      setShowForm(false); // Fecha o form
-      setNewExpense(""); // Limpa os inputs
+      // Atualiza localmente após envio
+      setExpenses((prev) => ({
+        ...prev,
+        [newExpense]: Number(newExpenseValue),
+      }));
+
+      setShowForm(false);
+      setNewExpense("");
       setNewExpenseValue(0);
     } catch (err) {
       console.error(err);
@@ -46,44 +49,46 @@ function ExpensesCard() {
   };
 
   return (
-    <div className=" flex flex-col items-center justify-center h-full space-y-20 bg-radial-[at_50%_-30%] from-[#15015f] to-[#000000] rounded-2xl">
-      <div className=" text-center flex flex-col gap-4">
-        <span className="text-4xl font-inter ">Expenses:</span>
-        {userList.map((users) => (
-          <h1 className="text-5xl font-lexend text-red-600">
-            {"-" + users.Expenses + "R$"}
-          </h1>
-        ))}
+    <div className="flex flex-col items-center justify-center h-full space-y-20 bg-radial-[at_50%_-30%] from-[#15015f] to-[#000000] rounded-2xl">
+      <div className="text-center flex flex-col gap-4">
+        <span className="text-4xl font-inter">Expenses:</span>
+        <h1 className="text-5xl font-lexend text-red-600">
+          -
+          {Object.values(expenses)
+            .reduce((acc, val) => acc + val, 0)
+            .toFixed(2)}
+          R$
+        </h1>
       </div>
-      <div className="flex flex-col justify-start w-8/10 gap-2 border-white/50">
-        <span className="text-2xl text-white/50 border-white/50 border-b-1 p-2 flex justify-between">
-          agua: 250R$
-          <div className="flex gap-4">
-            <Pencil className="cursor-pointer" />
-            <Trash className="cursor-pointer" />
-          </div>
-        </span>
-        <span className="text-2xl text-white/50 border-white/50 border-b-1 p-2 flex justify-between">
-          luz: 125R$
-          <div className="flex gap-4">
-            <Pencil className="cursor-pointer" />
-            <Trash className="cursor-pointer" />
-          </div>
-        </span>
-        <span className="text-2xl text-white/50 border-white/50 border-b-1 p-2 flex justify-between">
-          gas: 125R$
-          <div className="flex gap-4">
-            <Pencil onClick="" className="cursor-pointer" />
-            <Trash className="cursor-pointer" />
-          </div>
-        </span>
+
+      <div className="flex flex-col justify-start w-8/10 gap-2 border-white/50 h-60 items-center">
+        <div className="text-2xl text-white/50 p-4  h-100 w-100 overflow-y-scroll scrollbar-thin scrollbar-thumb-white/30 scrollbar-track-transparent">
+          <ul className="flex flex-col gap-2 scrollbar-track-transparent">
+            {Object.entries(expenses).map(([key, value]) => (
+              <li
+                key={key}
+                className="flex justify-between items-center mb-2 border-b-1 border-white/50"
+              >
+                <span>
+                  {key}: R$ {value.toFixed(2)}
+                </span>
+                <div className="flex gap-2">
+                  <Pencil className="cursor-pointer" />
+                  <Trash className="cursor-pointer" />
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
+
       <div
-        className="flex  rounded-full h-12 w-12 items-center justify-center hover:border-2 cursor-pointer border-white/50"
+        className="flex rounded-full h-12 w-12 items-center justify-center hover:border-2 cursor-pointer border-white/50"
         onClick={() => setShowForm(true)}
       >
         <Plus className="w-8 h-8" />
       </div>
+
       {showForm && (
         <div className="absolute top-2/6 left-1/2 transform -translate-x-1/2 w-120 h-80 bg-radial-[at_50%_-30%] from-[#15015f] to-[#000000] p-6 rounded-lg border-1 border-white/50">
           <h2 className="text-2xl font-bold mb-4">Add new Expense</h2>
@@ -92,18 +97,20 @@ function ExpensesCard() {
             type="text"
             placeholder="Name"
             className="border-2 border-gray-300 p-2 mb-4 w-full"
+            value={newExpense}
           />
           <input
             onChange={(e) => setNewExpenseValue(e.target.value)}
             type="number"
             placeholder="Value"
             className="border-2 border-gray-300 p-2 mb-4 w-full"
+            value={newExpenseValue}
           />
           <div className="flex justify-end gap-4">
             <Button className="bg-gray-400" onClick={() => setShowForm(false)}>
               Cancel
             </Button>
-            <Button onClick={onSubmitExpense}> Add </Button>
+            <Button onClick={onSubmitExpense}>Add</Button>
           </div>
         </div>
       )}

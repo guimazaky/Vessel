@@ -1,3 +1,7 @@
+@tailwind utilities;
+@import "tailwindcss";
+
+@plugin 'tailwind-scrollbar';
 @font-face {
   font-family: GFS Didot;
   src: url("../src/assets/fonts/GFSDidot-Regular.ttf");
