@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../../config/firebase";
-import { getDoc, doc, updateDoc } from "firebase/firestore";
+import { getDoc, doc, setDoc, updateDoc } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 import { Trash, Plus, Pencil } from "lucide-react";
 import { Button } from "./button";
 
@@ -11,11 +12,35 @@ function ExpensesCard() {
   const [newExpenseValue, setNewExpenseValue] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
   const [editingKey, setEditingKey] = useState(null);
-  const userId = "X5STyVp4rKFXDX3ZevUR";
-  const userDocRef = doc(db, "users", userId);
+  const [userDocRef, setUserDocRef] = useState(null);
+
+  useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        const userId = user.uid;
+        const docRef = doc(db, "users", userId);
+
+        // Verifique se o documento do usuário existe
+        const docSnap = await getDoc(docRef);
+        if (!docSnap.exists()) {
+          // Se o documento não existir, crie um novo documento com dados iniciais
+          await setDoc(docRef, {
+            Expenses: {},
+          });
+        }
+
+        setUserDocRef(docRef);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     const getUserData = async () => {
+      if (!userDocRef) return;
+
       try {
         const docSnap = await getDoc(userDocRef);
         if (docSnap.exists()) {
@@ -28,7 +53,14 @@ function ExpensesCard() {
     };
 
     getUserData();
-  }, []);
+  }, [userDocRef]);
+
+  const getCurrentMonthYear = () => {
+    const currentDate = new Date();
+    return `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}`;
+  };
 
   const handleDeleteExpense = async (expenseKey) => {
     try {
@@ -47,25 +79,27 @@ function ExpensesCard() {
 
   const onSubmitExpense = async () => {
     try {
+      const monthYear = getCurrentMonthYear();
       let updatedExpenses = { ...expenses };
 
       if (isEditing) {
-        // Remove a antiga se o nome mudou
         if (editingKey !== newExpense) {
           delete updatedExpenses[editingKey];
         }
 
-        updatedExpenses[newExpense] = Number(newExpenseValue);
+        updatedExpenses[monthYear] = updatedExpenses[monthYear] || {};
+        updatedExpenses[monthYear][newExpense] = Number(newExpenseValue);
 
         await updateDoc(userDocRef, {
           Expenses: updatedExpenses,
         });
       } else {
-        await updateDoc(userDocRef, {
-          [`Expenses.${newExpense}`]: Number(newExpenseValue),
-        });
+        updatedExpenses[monthYear] = updatedExpenses[monthYear] || {};
+        updatedExpenses[monthYear][newExpense] = Number(newExpenseValue);
 
-        updatedExpenses[newExpense] = Number(newExpenseValue);
+        await updateDoc(userDocRef, {
+          Expenses: updatedExpenses,
+        });
       }
 
       setExpenses(updatedExpenses);
@@ -84,43 +118,50 @@ function ExpensesCard() {
       <div className="text-center flex flex-col gap-4">
         <span className="text-4xl font-inter">Expenses:</span>
         <h1 className="text-5xl font-lexend text-red-600">
-          -
-          {Object.values(expenses)
-            .reduce((acc, val) => acc + val, 0)
-            .toFixed(2)}
+          -{" "}
+          {Object.values(expenses[getCurrentMonthYear()] || {})
+            .reduce(
+              (acc, val) =>
+                acc + (typeof val === "number" && !isNaN(val) ? val : 0),
+              0
+            )
+            .toFixed(2)}{" "}
           R$
         </h1>
       </div>
 
       <div className="flex flex-col justify-start w-8/10 gap-2 border-white/50 h-60 items-center">
-        <div className="text-2xl text-white/50 p-4  h-100 w-100 overflow-y-scroll scrollbar-thin scrollbar-thumb-white/30 scrollbar-track-transparent">
-          <ul className="flex flex-col gap-2 scrollbar-track-transparent">
-            {Object.entries(expenses).map(([key, value]) => (
-              <li
-                key={key}
-                className="flex justify-between items-center mb-2 border-b-1 border-white/50"
-              >
-                <span>
-                  {key}: R$ {value.toFixed(2)}
-                </span>
-                <div className="flex gap-2">
-                  <Pencil
-                    className="cursor-pointer"
-                    onClick={() => {
-                      setIsEditing(true);
-                      setEditingKey(key);
-                      setNewExpense(key);
-                      setNewExpenseValue(value);
-                      setShowForm(true);
-                    }}
-                  />
-                  <Trash
-                    className="cursor-pointer"
-                    onClick={() => handleDeleteExpense(key)}
-                  />
-                </div>
-              </li>
-            ))}
+        <div className="text-2xl text-white/50 p-4 h-100 w-100 overflow-y-scroll scrollbar-thin scrollbar-thumb-white/30 scrollbar-track-transparent">
+          <ul className="flex flex-col gap-2">
+            {Object.entries(expenses[getCurrentMonthYear()] || {}).map(
+              ([key, value]) => (
+                <li
+                  key={key}
+                  className="flex justify-between items-center mb-2 border-b-1 border-white/50"
+                >
+                  <span>
+                    {key}: R${" "}
+                    {typeof value === "number" ? value.toFixed(2) : "0.00"}
+                  </span>
+                  <div className="flex gap-2">
+                    <Pencil
+                      className="cursor-pointer"
+                      onClick={() => {
+                        setIsEditing(true);
+                        setEditingKey(key);
+                        setNewExpense(key);
+                        setNewExpenseValue(value);
+                        setShowForm(true);
+                      }}
+                    />
+                    <Trash
+                      className="cursor-pointer"
+                      onClick={() => handleDeleteExpense(key)}
+                    />
+                  </div>
+                </li>
+              )
+            )}
           </ul>
         </div>
       </div>

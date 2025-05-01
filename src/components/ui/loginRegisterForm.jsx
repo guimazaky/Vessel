@@ -14,11 +14,13 @@ function LoginRegisterForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
   const signIn = async () => {
     try {
       setError("");
       await createUserWithEmailAndPassword(auth, email, password);
-      navigate("/user_results");
+      const userId = auth.currentUser.uid; // Pega o ID do usuário logado
+      navigate(`/user_results/${userId}`); // Navega para a página do usuário
     } catch (err) {
       setError(err.message);
     }
@@ -28,7 +30,8 @@ function LoginRegisterForm() {
     try {
       setError("");
       await signInWithEmailAndPassword(auth, email, password);
-      navigate("/user_results");
+      const userId = auth.currentUser.uid; // Pega o ID do usuário logado
+      navigate(`/user_results/${userId}`); // Navega para a página do usuário
     } catch (err) {
       setError(err.message);
     }
@@ -38,7 +41,8 @@ function LoginRegisterForm() {
     try {
       setError("");
       await signInWithPopup(auth, googleProvider);
-      navigate("/user_results");
+      const userId = auth.currentUser.uid; // Pega o ID do usuário logado
+      navigate(`/user_results/${userId}`); // Navega para a página do usuário
     } catch (err) {
       setError(err.message);
     }
