@@ -9,7 +9,9 @@ function ExpensesCard() {
   const [showForm, setShowForm] = useState(false);
   const [newExpense, setNewExpense] = useState("");
   const [newExpenseValue, setNewExpenseValue] = useState(0);
-  const userId = "X5STyVp4rKFXDX3ZevUR"; // ID fixo do usuário
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingKey, setEditingKey] = useState(null);
+  const userId = "X5STyVp4rKFXDX3ZevUR";
   const userDocRef = doc(db, "users", userId);
 
   useEffect(() => {
@@ -28,21 +30,50 @@ function ExpensesCard() {
     getUserData();
   }, []);
 
-  const onSubmitExpense = async () => {
+  const handleDeleteExpense = async (expenseKey) => {
     try {
+      const updatedExpenses = { ...expenses };
+      delete updatedExpenses[expenseKey];
+
       await updateDoc(userDocRef, {
-        [`Expenses.${newExpense}`]: Number(newExpenseValue),
+        Expenses: updatedExpenses,
       });
 
-      // Atualiza localmente após envio
-      setExpenses((prev) => ({
-        ...prev,
-        [newExpense]: Number(newExpenseValue),
-      }));
+      setExpenses(updatedExpenses);
+    } catch (err) {
+      console.error("Erro ao excluir expense:", err);
+    }
+  };
 
+  const onSubmitExpense = async () => {
+    try {
+      let updatedExpenses = { ...expenses };
+
+      if (isEditing) {
+        // Remove a antiga se o nome mudou
+        if (editingKey !== newExpense) {
+          delete updatedExpenses[editingKey];
+        }
+
+        updatedExpenses[newExpense] = Number(newExpenseValue);
+
+        await updateDoc(userDocRef, {
+          Expenses: updatedExpenses,
+        });
+      } else {
+        await updateDoc(userDocRef, {
+          [`Expenses.${newExpense}`]: Number(newExpenseValue),
+        });
+
+        updatedExpenses[newExpense] = Number(newExpenseValue);
+      }
+
+      setExpenses(updatedExpenses);
       setShowForm(false);
       setNewExpense("");
       setNewExpenseValue(0);
+      setIsEditing(false);
+      setEditingKey(null);
     } catch (err) {
       console.error(err);
     }
@@ -73,8 +104,20 @@ function ExpensesCard() {
                   {key}: R$ {value.toFixed(2)}
                 </span>
                 <div className="flex gap-2">
-                  <Pencil className="cursor-pointer" />
-                  <Trash className="cursor-pointer" />
+                  <Pencil
+                    className="cursor-pointer"
+                    onClick={() => {
+                      setIsEditing(true);
+                      setEditingKey(key);
+                      setNewExpense(key);
+                      setNewExpenseValue(value);
+                      setShowForm(true);
+                    }}
+                  />
+                  <Trash
+                    className="cursor-pointer"
+                    onClick={() => handleDeleteExpense(key)}
+                  />
                 </div>
               </li>
             ))}
@@ -84,14 +127,21 @@ function ExpensesCard() {
 
       <div
         className="flex rounded-full h-12 w-12 items-center justify-center hover:border-2 cursor-pointer border-white/50"
-        onClick={() => setShowForm(true)}
+        onClick={() => {
+          setShowForm(true);
+          setIsEditing(false);
+          setNewExpense("");
+          setNewExpenseValue(0);
+        }}
       >
         <Plus className="w-8 h-8" />
       </div>
 
       {showForm && (
         <div className="absolute top-2/6 left-1/2 transform -translate-x-1/2 w-120 h-80 bg-radial-[at_50%_-30%] from-[#15015f] to-[#000000] p-6 rounded-lg border-1 border-white/50">
-          <h2 className="text-2xl font-bold mb-4">Add new Expense</h2>
+          <h2 className="text-2xl font-bold mb-4">
+            {isEditing ? "Edit Expense" : "Add new Expense"}
+          </h2>
           <input
             onChange={(e) => setNewExpense(e.target.value)}
             type="text"
@@ -107,10 +157,19 @@ function ExpensesCard() {
             value={newExpenseValue}
           />
           <div className="flex justify-end gap-4">
-            <Button className="bg-gray-400" onClick={() => setShowForm(false)}>
+            <Button
+              className="bg-gray-400"
+              onClick={() => {
+                setShowForm(false);
+                setIsEditing(false);
+                setEditingKey(null);
+              }}
+            >
               Cancel
             </Button>
-            <Button onClick={onSubmitExpense}>Add</Button>
+            <Button onClick={onSubmitExpense}>
+              {isEditing ? "Update" : "Add"}
+            </Button>
           </div>
         </div>
       )}
