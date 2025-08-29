@@ -46,9 +46,8 @@ body {
 }
 
 :root {
-  --background-gradient: linear-gradient(135deg, #3b82f6, #06b6d4);
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
+  --background: #141922;
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
@@ -79,6 +78,7 @@ body {
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --gradient-primary: linear-gradient(135deg, hsl(220, 25%, 8%) 0%, hsl(217, 91%, 25%) 50%, hsl(213, 93%, 40%) 100%);
 }
 
 .dark {
@@ -113,15 +113,17 @@ body {
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50 text-white;
+    @apply border-border outline-ring/50 ;
   }
 
   body {
-    @apply  bg-linear-to-t from-[#020d2d]  to-[#0174df];
+    @apply bg-background text-white;
+    background: var(--gradient-primary);
   }
 
 }
@@ -134,7 +136,8 @@ body {
 
   .clickable { @apply cursor-pointer; }
 
-  .bg-gradient { @apply bg-linear-to-r from-[#3b82f6] to-[#020d2d] }
+  .bg-gradient { @apply bg-background ;
+    background: var(--gradient-primary); }
 
 }
 

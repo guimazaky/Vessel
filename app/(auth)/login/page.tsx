@@ -1,14 +1,15 @@
 import React from "react";
-import { LoginForm } from "@/components/login-form";
-import { auth, signIn } from "@/lib/auth";
+
+import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import { LoginForm } from "@/components/login-form";
 
 const Page = async () => {
   const session = await auth();
   if (session) redirect("/");
 
   return (
-    <div>
+    <div className="flex flex-col">
       <LoginForm />
     </div>
   );
