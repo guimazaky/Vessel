@@ -35,7 +35,7 @@ export function LoginForm({
     if (res?.error) {
       setError("Email ou senha inválidos.");
     } else {
-      window.location.href = "/";
+      window.location.href = "/dashboard";
     }
   }
 

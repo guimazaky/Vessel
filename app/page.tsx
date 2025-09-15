@@ -7,12 +7,12 @@ const Page = async () => {
   const session = await auth();
 
   if (!session) redirect("/login");
+  else redirect("/dashboard");
 
   return (
     <div className="main center flex-col gap-8 text-8xl">
       Vessel
       <SignOut />
-      <h1 className="text-2xl">{session.user?.email}</h1>
     </div>
   );
 };

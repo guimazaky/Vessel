@@ -6,7 +6,7 @@ import { LoginForm } from "@/components/login-form";
 
 const Page = async () => {
   const session = await auth();
-  if (session) redirect("/");
+  if (session) redirect("/dashboard");
 
   return (
     <div className="flex flex-col">

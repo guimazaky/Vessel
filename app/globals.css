@@ -79,6 +79,8 @@ body {
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
   --gradient-primary: linear-gradient(135deg, hsl(220, 25%, 8%) 0%, hsl(217, 91%, 25%) 50%, hsl(213, 93%, 40%) 100%);
+  --gradient-accent: linear-gradient(135deg, hsl(217 91% 60%) 0%, hsl(189 94% 70%) 100%);
+
 }
 
 .dark {
@@ -118,7 +120,7 @@ body {
 
 @layer base {
   * {
-    @apply border-border outline-ring/50 ;
+    @apply border-border outline-ring/50 text-white;
   }
 
   body {
@@ -130,7 +132,7 @@ body {
 
 @layer components {
 
-  .main { @apply min-h-screen flex; }
+  .main { @apply h-screen flex; }
 
   .center { @apply flex items-center justify-center; }
 
@@ -139,5 +141,18 @@ body {
   .bg-gradient { @apply bg-background ;
     background: var(--gradient-primary); }
 
+  .bg-gradient-accent { @apply bg-background;
+    background: var(--gradient-accent); }
+
+}
+
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }
 
