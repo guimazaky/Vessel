@@ -1,7 +1,7 @@
 import React from "react";
 import SmallCard from "@/components/ui/widgets/small-card";
-import { Briefcase, DollarSign, TrendingUp } from "lucide-react";
-import IncomeBigCard from "@/components/ui/widgets/income-big-card";
+import { ShoppingCart, DollarSign, TrendingDown } from "lucide-react";
+import ExpensesBigCard from "@/components/ui/widgets/expenses-big-card";
 import {
   Dialog,
   DialogContent,
@@ -21,77 +21,83 @@ import {
 } from "@/components/ui/shadcn/select";
 import { Button } from "@/components/ui/shadcn/button";
 
-const big = [
-  {
-    name: "Main Job - Tech Company",
-    amount: 2200,
-    frequency: "Monthly",
-    status: "Active",
-  },
-  {
-    name: "Freelance Projects",
-    amount: 250,
-    frequency: "Variable",
-    status: "Active",
-  },
-  {
-    name: "Investment Returns",
-    amount: 50,
-    frequency: "Monthly",
-    status: "Active",
-  },
-];
-
 const small = [
   {
-    name: "Total Income",
-    amount: "$2,500",
-    label: "+12.5% this month",
+    name: "Total Expenses",
+    amount: "$1,300",
+    label: "-8.2%\n" + "vs last month",
     icon: DollarSign,
   },
   {
-    name: "Primary Source",
-    amount: "$2,200",
-    label: "Stable",
-    icon: Briefcase,
+    name: "Largest Category",
+    amount: "$800",
+    label: "Housing\n" + "61% of expenses",
+    icon: ShoppingCart,
   },
   {
-    name: "Growth Rate",
-    amount: "+8.3%",
-    label: "Compared to last month",
-    icon: TrendingUp,
+    name: "Daily Average",
+    amount: "$43",
+    label: "-$5\n" + "vs last month",
+    icon: TrendingDown,
+  },
+];
+
+const big = [
+  {
+    name: "Housing",
+    amount: 800,
+    percentage: 61,
+    color: "bg-blue-500",
+  },
+  {
+    name: "Food & Dining",
+    amount: 250,
+    percentage: 19,
+    color: "bg-green-500",
+  },
+  {
+    name: "Transportation",
+    amount: 150,
+    percentage: 12,
+    color: "bg-yellow-500",
+  },
+  {
+    name: "Entertainment",
+    amount: 100,
+    percentage: 8,
+    color: "bg-red-500",
   },
 ];
 
 const Page = () => {
   return (
     <div className="flex flex-col w-full m-8 gap-4">
-      <div className="flex justify-between h-25  center  ">
+      <div className="flex justify-between h-25 center">
         <div>
-          <h1 className="text-4xl font-bold">Income Management</h1>
+          <h1 className="text-4xl font-bold">Expense Management</h1>
           <span className="text-sm font-thin text-white/75">
-            Track and manage all your income sources
+            Monitor and control your spending
           </span>
         </div>
         <div className="center bg-gradient-accent p-2 px-4 gap-2 rounded-lg cursor-pointer  ">
           <Dialog>
             <DialogTrigger className="text-black text-md hover:text-white cursor-pointer">
-              Add Income
+              Add Expense
             </DialogTrigger>
             <DialogContent className="gap-4 border border-white/25">
               <DialogHeader>
-                <DialogTitle>Add New Income Source</DialogTitle>
+                <DialogTitle>Add New Expense</DialogTitle>
               </DialogHeader>
               <div className="flex flex-col gap-2">
-                <Label>Income Name</Label>
+                <Label>Expense Name</Label>
                 <Input
                   id="income-name"
-                  placeholder="Main Job, Freelance, Investment"
+                  placeholder="Rent, Groceries, Utilities"
                   required
                 />
               </div>
               <div className="flex flex-col gap-2">
-                <Label>Income Value</Label>
+                <Label>Expense Value</Label>
                 <Input
                   id="income-value"
                   type="number"
@@ -99,23 +105,31 @@ const Page = () => {
                   required
                 />
               </div>
-              <div className="space-y-3">
+              <div className="flex justify-between space-y-3">
                 <RadioGroup defaultValue="option-one">
-                  <Label>Income Type</Label>
+                  <Label>Select Category</Label>
                   <div className="flex items-center space-x-2 ">
                     <RadioGroupItem value="option-one" id="option-one" />
-                    <Label>Main Salary</Label>
+                    <Label>Housing</Label>
                   </div>
                   <div className="flex items-center space-x-2 ">
                     <RadioGroupItem value="option-two" id="option-two" />
-                    <Label>Additional Source</Label>
+                    <Label>Food</Label>
+                  </div>
+                  <div className="flex items-center space-x-2 ">
+                    <RadioGroupItem value="option-three" id="option-three" />
+                    <Label>Transportation</Label>
+                  </div>
+                  <div className="flex items-center space-x-2 ">
+                    <RadioGroupItem value="option-four" id="option-four" />
+                    <Label>Entertainment</Label>
                   </div>
                 </RadioGroup>
               </div>
               <div>
                 <Select>
                   <SelectTrigger className="w-[180px] border border-white/25">
-                    <SelectValue placeholder="Payment Period" />
+                    <SelectValue placeholder="Expense Period" />
                   </SelectTrigger>
                   <SelectContent className="bg-background">
                     <SelectItem value="daily" className="cursor-pointer">
@@ -143,16 +157,16 @@ const Page = () => {
                   type="submit"
                   className="bg-gradient-accent hover:shadow-glow cursor-pointer"
                 >
-                  Add Income
+                  Add Expense
                 </Button>
               </div>
             </DialogContent>
           </Dialog>
         </div>
       </div>
-      <div className="flex flex-col gap-4 ">
+      <div className="flex flex-col gap-4">
         <SmallCard label={small} />
-        <IncomeBigCard label={big} />
+        <ExpensesBigCard label={big} />
       </div>
     </div>
   );
