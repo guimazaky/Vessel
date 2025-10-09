@@ -16,10 +16,11 @@ import {
 import { Label } from "@/components/ui/shadcn/label";
 import { Input } from "@/components/ui/shadcn/input";
 import ColorPicker from "@/components/ui/widgets/color-picker";
+import AddButton from "@/components/ui/widgets/add-button";
 
 interface ExpensesItem {
   name: string;
-  amount: number;
+  value: number;
   percentage: number;
   color: string;
 }
@@ -34,20 +35,20 @@ const ExpensesBigCard = ({ label }: CardProps) => {
       <Card className="bg-black/25">
         <CardHeader className="flex justify-between">
           <CardTitle>Income Sources</CardTitle>
-          <div>
+          <div className="flex gap-4">
             <Dialog>
               <DialogTrigger className="center bg-gradient-accent p-2 px-4 gap-2 rounded-lg cursor-pointer text-black hover:text-white">
-                Create Category
+                Criar categoria
               </DialogTrigger>
               <DialogContent className="gap-4 border border-white/25">
                 <DialogHeader>
-                  <DialogTitle>Create New Category</DialogTitle>
+                  <DialogTitle>Criar nova categoria</DialogTitle>
                 </DialogHeader>
                 <div className="flex flex-col gap-2">
-                  <Label>Category Name</Label>
+                  <Label>Nome da categoria</Label>
                   <Input
                     id="income-name"
-                    placeholder="Housing, Food, Entertainment"
+                    placeholder="Comida, Saúde, Entretenimento"
                     required
                   />
                 </div>
@@ -59,18 +60,19 @@ const ExpensesBigCard = ({ label }: CardProps) => {
                     type="button"
                     className="border border-white/25 cursor-pointer"
                   >
-                    Cancel
+                    Cancelar
                   </Button>
 
                   <Button
                     type="submit"
                     className="bg-gradient-accent hover:shadow-glow cursor-pointer"
                   >
-                    Crete Category
+                    Criar
                   </Button>
                 </div>
               </DialogContent>
             </Dialog>
+            <AddButton />
           </div>
         </CardHeader>
         <CardContent>
@@ -81,7 +83,12 @@ const ExpensesBigCard = ({ label }: CardProps) => {
                 className="flex items-center justify-between p-4 rounded-lg   transition-colors border border-white/25 hover:bg-white/5"
               >
                 <div className="flex items-center space-x-3">
-                  <div className={`w-4 h-4 rounded-full ${item.color}`}></div>
+                  <div
+                    className="w-4 h-4 rounded-full"
+                    style={{
+                      backgroundColor: item.color,
+                    }}
+                  ></div>
                   <div>
                     <h3 className="font-medium ">{item.name}</h3>
                     <p className="text-sm text-white/50">
@@ -90,11 +97,14 @@ const ExpensesBigCard = ({ label }: CardProps) => {
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="font-semibold ">${item.amount}</p>
+                  <p className="font-semibold ">${item.value}</p>
                   <div className="w-40 bg-black/50 rounded-full h-2 mt-1">
                     <div
-                      className={`h-2 rounded-full ${item.color}`}
-                      style={{ width: `${item.percentage}%` }}
+                      className="h-2 rounded-full "
+                      style={{
+                        width: `${item.percentage}%`,
+                        backgroundColor: item.color,
+                      }}
                     ></div>
                   </div>
                 </div>

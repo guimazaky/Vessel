@@ -4,43 +4,50 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/shadcn/button";
 import { Input } from "@/components/ui/shadcn/input";
 import { Label } from "@/components/ui/shadcn/label";
-import { signIn } from "next-auth/react";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
+import { signIn } from "@/lib/actions/auth-actions";
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
 
-export function LoginForm({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
-  const [error, setError] = useState<string | null>(null);
+type Session = typeof auth.$Infer.Session;
+
+interface FormProps extends React.ComponentProps<"div"> {
+  session: Session | null;
+}
+
+export function LoginForm({ className, session, ...props }: FormProps) {
+  const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
+    setError("");
 
-    const email = formData.get("email")?.toString();
-    const password = formData.get("password")?.toString();
-
-    if (!email || !password) {
-      setError("Preencha todos os campos.");
-      return;
+    try {
+      const result = await signIn(email, password);
+      if (!result.user) {
+        setError("Email ou senha inválidos!");
+      }
+    } catch (err: unknown) {
+      if (err instanceof Error) setError(err.message);
+      else setError(String(err));
     }
+  };
 
-    const res = await signIn("credentials", {
-      redirect: false,
-      email: formData.get("email"),
-      password: formData.get("password"),
-    });
-    if (res?.error) {
-      setError("Email ou senha inválidos.");
-    } else {
-      window.location.href = "/dashboard";
-    }
+  if (session) {
+    redirect("/dashboard");
   }
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
+      <div className="center flex flex-col gap-2">
+        <h1 className="text-3xl font-bold">Bem-vindo ao Vessel!</h1>
+        <h1 className="text-white/80 ">Entre com seu Login!</h1>
+      </div>
+
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col gap-6 ">
           <div className="flex flex-col gap-6">
@@ -58,6 +65,8 @@ export function LoginForm({
                   type="email"
                   placeholder="Seu email"
                   className="  pl-10 "
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
             </div>
@@ -71,6 +80,8 @@ export function LoginForm({
                   type={showPassword ? "text" : "password"}
                   placeholder="Sua senha"
                   className=" pl-10 "
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
                 <button
                   type="button"

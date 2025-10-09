@@ -7,7 +7,7 @@ const monaSans = Mona_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "MyFinances",
+  title: "Vessel",
   description: "Your finances app",
 };
 

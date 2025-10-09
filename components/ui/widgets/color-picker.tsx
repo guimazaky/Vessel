@@ -28,7 +28,7 @@ const CategoryColorPicker = () => {
 
   return (
     <div>
-      <h2 className="mb-2 font-semibold">Choose color</h2>
+      <h2 className="mb-2 font-semibold">Escolha a cor</h2>
 
       <CirclePicker
         color={color}
@@ -37,7 +37,7 @@ const CategoryColorPicker = () => {
       />
 
       <p className="mt-2">
-        Color: <span style={{ color }}>{color}</span>
+        Cor: <span style={{ color }}>{color}</span>
       </p>
     </div>
   );

@@ -1,12 +1,13 @@
-import React from "react";
-import { redirect } from "next/navigation";
-import { auth } from "@/lib/auth";
+"use client";
+import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
-const Page = async () => {
-  const session = await auth();
+const Page = () => {
+  const router = useRouter(); // precisa estar dentro do componente
 
-  if (!session) redirect("/login");
-  else redirect("/dashboard");
+  useEffect(() => {
+    router.replace("/login"); // redireciona assim que entrar
+  }, [router]);
 
   return <div className="main center flex-col gap-8 text-8xl">Vessel</div>;
 };
