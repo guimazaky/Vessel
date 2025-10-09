@@ -5,34 +5,56 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/shadcn/button";
 import { Input } from "@/components/ui/shadcn/input";
 import { Label } from "@/components/ui/shadcn/label";
-import { useState } from "react";
+import React, { useState } from "react";
+import { signUp } from "@/lib/actions/auth-actions";
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
 
-export function RegisterForm({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
+type Session = typeof auth.$Infer.Session;
+
+interface FormProps extends React.ComponentProps<"div"> {
+  session: Session | null;
+}
+
+export function RegisterForm({ className, session, ...props }: FormProps) {
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [error, setError] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
 
-    const formData = new FormData(e.currentTarget);
-
-    const res = await fetch("/api/register", {
-      method: "POST",
-      body: formData,
-    });
-
-    if (res.ok) {
-      window.location.href = "/login";
+    try {
+      const result = await signUp(email, password, name);
+      if (!result.user) {
+        setError("Erro ao criar conta");
+      } else {
+        redirect("/login");
+      }
+    } catch (err: unknown) {
+      if (err instanceof Error) setError(err.message);
+      else setError(String(err));
     }
   };
 
+  if (session) {
+    redirect("/dashboard");
+  }
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
+      <div className="flex flex-col gap-2 center">
+        <h1 className="text-3xl font-bold">Bem-vindo ao Vessel!</h1>
+        <h1 className="text-white/80 ">Crie sua conta!</h1>
+      </div>
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col gap-6">
-          <div className="flex flex-col items-center gap-2"></div>
+          <div className="flex flex-col items-center gap-2">
+            {error && <p className="text-red-500 text-sm">{error}</p>}
+          </div>
           <div className="flex flex-col gap-6">
             <div className="grid gap-3">
               <Label htmlFor="nome">Seu nome</Label>
@@ -44,6 +66,8 @@ export function RegisterForm({
                   type="text"
                   placeholder="Nome"
                   className="pl-10 "
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                 />
               </div>
             </div>
@@ -58,6 +82,8 @@ export function RegisterForm({
                   type="email"
                   placeholder="Seu email"
                   className="  pl-10 "
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
             </div>
@@ -72,6 +98,8 @@ export function RegisterForm({
                   type={showPassword ? "text" : "password"}
                   placeholder="Sua senha"
                   className=" pl-10 "
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
                 <button
                   type="button"

@@ -1,3 +1,7 @@
+import { redirect } from "next/navigation";
+
+("user client");
+
 import React from "react";
 import {
   Avatar,
@@ -5,14 +9,12 @@ import {
   AvatarImage,
 } from "@/components/ui/shadcn/avatar";
 import { LogOut } from "lucide-react";
-import { signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { signOut } from "@/lib/actions/auth-actions";
 
 const SidebarFooter = () => {
-  const router = useRouter();
-
   const handleSignOut = async () => {
-    await signOut({ callbackUrl: "/login" });
+    await signOut();
+    redirect("/login");
   };
 
   return (

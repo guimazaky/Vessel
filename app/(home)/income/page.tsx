@@ -1,159 +1,18 @@
 import React from "react";
-import SmallCard from "@/components/ui/widgets/small-card";
-import { Briefcase, DollarSign, TrendingUp } from "lucide-react";
-import IncomeBigCard from "@/components/ui/widgets/income-big-card";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/shadcn/dialog";
-import { Label } from "@/components/ui/shadcn/label";
-import { Input } from "@/components/ui/shadcn/input";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/shadcn/radio-group";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/shadcn/select";
-import { Button } from "@/components/ui/shadcn/button";
+import Income from "@/components/ui/pages/income";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { AppSidebar } from "@/components/ui/sidebar/app-sidebar";
 
-const big = [
-  {
-    name: "Main Job - Tech Company",
-    amount: 2200,
-    frequency: "Monthly",
-    status: "Active",
-  },
-  {
-    name: "Freelance Projects",
-    amount: 250,
-    frequency: "Variable",
-    status: "Active",
-  },
-  {
-    name: "Investment Returns",
-    amount: 50,
-    frequency: "Monthly",
-    status: "Active",
-  },
-];
+const Page = async () => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-const small = [
-  {
-    name: "Total Income",
-    amount: "$2,500",
-    label: "+12.5% this month",
-    icon: DollarSign,
-  },
-  {
-    name: "Primary Source",
-    amount: "$2,200",
-    label: "Stable",
-    icon: Briefcase,
-  },
-  {
-    name: "Growth Rate",
-    amount: "+8.3%",
-    label: "Compared to last month",
-    icon: TrendingUp,
-  },
-];
-
-const Page = () => {
   return (
-    <div className="flex flex-col w-full m-8 gap-4">
-      <div className="flex justify-between h-25  center  ">
-        <div>
-          <h1 className="text-4xl font-bold">Income Management</h1>
-          <span className="text-sm font-thin text-white/75">
-            Track and manage all your income sources
-          </span>
-        </div>
-        <div className="center bg-gradient-accent p-2 px-4 gap-2 rounded-lg cursor-pointer  ">
-          <Dialog>
-            <DialogTrigger className="text-black text-md hover:text-white cursor-pointer">
-              Add Income
-            </DialogTrigger>
-            <DialogContent className="gap-4 border border-white/25">
-              <DialogHeader>
-                <DialogTitle>Add New Income Source</DialogTitle>
-              </DialogHeader>
-              <div className="flex flex-col gap-2">
-                <Label>Income Name</Label>
-                <Input
-                  id="income-name"
-                  placeholder="Main Job, Freelance, Investment"
-                  required
-                />
-              </div>
-              <div className="flex flex-col gap-2">
-                <Label>Income Value</Label>
-                <Input
-                  id="income-value"
-                  type="number"
-                  placeholder="Enter amount"
-                  required
-                />
-              </div>
-              <div className="space-y-3">
-                <RadioGroup defaultValue="option-one">
-                  <Label>Income Type</Label>
-                  <div className="flex items-center space-x-2 ">
-                    <RadioGroupItem value="option-one" id="option-one" />
-                    <Label>Main Salary</Label>
-                  </div>
-                  <div className="flex items-center space-x-2 ">
-                    <RadioGroupItem value="option-two" id="option-two" />
-                    <Label>Additional Source</Label>
-                  </div>
-                </RadioGroup>
-              </div>
-              <div>
-                <Select>
-                  <SelectTrigger className="w-[180px] border border-white/25">
-                    <SelectValue placeholder="Payment Period" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-background">
-                    <SelectItem value="daily" className="cursor-pointer">
-                      Daily
-                    </SelectItem>
-                    <SelectItem value="monthly" className="cursor-pointer">
-                      Monthly
-                    </SelectItem>
-                    <SelectItem value="yearly" className="cursor-pointer">
-                      Yearly
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="flex justify-end space-x-2 pt-4 ">
-                <Button
-                  variant="outline"
-                  type="button"
-                  className="border border-white/25 cursor-pointer"
-                >
-                  Cancel
-                </Button>
-
-                <Button
-                  type="submit"
-                  className="bg-gradient-accent hover:shadow-glow cursor-pointer"
-                >
-                  Add Income
-                </Button>
-              </div>
-            </DialogContent>
-          </Dialog>
-        </div>
-      </div>
-      <div className="flex flex-col gap-4 ">
-        <SmallCard label={small} />
-        <IncomeBigCard label={big} />
-      </div>
+    <div className="flex w-full">
+      <AppSidebar />
+      <Income session={session} />
     </div>
   );
 };

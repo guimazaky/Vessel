@@ -1,16 +1,17 @@
 import React from "react";
 
-import { auth } from "@/lib/auth";
-import { redirect } from "next/navigation";
 import { LoginForm } from "@/components/ui/auth/login-form";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 const Page = async () => {
-  const session = await auth();
-  if (session) redirect("/dashboard");
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
   return (
     <div className="flex flex-col">
-      <LoginForm />
+      <LoginForm session={session} />
     </div>
   );
 };

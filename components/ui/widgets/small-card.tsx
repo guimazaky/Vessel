@@ -3,7 +3,7 @@ import { LucideIcon } from "lucide-react";
 
 interface IncomeItem {
   name: string;
-  amount: number | string;
+  value: number | string;
   label?: string;
   icon: LucideIcon;
 }
@@ -23,7 +23,7 @@ const SmallCard = ({ label }: CardProps) => {
           <div className="flex">
             <div>
               <span className="text-sm text-white/50">{item.name}</span>
-              <h1 className="text-lg font-bold">{item.amount}</h1>
+              <h1 className="text-lg font-bold">R$ {item.value}</h1>
               <span className="text-sm text-white/50">{item.label}</span>
             </div>
           </div>
