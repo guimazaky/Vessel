@@ -1,5 +1,3 @@
-"use server";
-
 import React from "react";
 import { RegisterForm } from "@/components/ui/auth/register-form";
 import { auth } from "@/lib/auth";

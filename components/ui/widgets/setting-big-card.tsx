@@ -19,13 +19,13 @@ interface SettingsItem {
 }
 
 interface CardProps {
-  label: SettingsItem[];
+  label: SettingsItem[] | null;
 }
 
 const SettingBigCard = ({ label }: CardProps) => {
   return (
     <div className="flex w-full gap-4">
-      {label.map((item) => (
+      {label?.map((item) => (
         <Card key={item.title} className="bg-black/25 w-full">
           <CardHeader>
             <CardTitle className="text-lg">{item.title}</CardTitle>

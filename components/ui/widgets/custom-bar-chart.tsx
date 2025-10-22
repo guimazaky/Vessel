@@ -15,14 +15,16 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/shadcn/chart";
 
-const chartData = [
-  { month: "January", income: 200, expenses: 152 },
-  { month: "February", income: 218, expenses: 165 },
-  { month: "March", income: 197, expenses: 149 },
-  { month: "April", income: 210, expenses: 170 },
-  { month: "May", income: 229, expenses: 181 },
-  { month: "June", income: 220, expenses: 174 },
-];
+interface CustomBarChartProps {
+  chartData?:
+    | {
+        month: string;
+        income: number;
+        expenses: number;
+      }[]
+    | null;
+}
+
 const chartConfig = {
   income: {
     label: "Income",
@@ -34,40 +36,43 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-const CustomBarChart = () => {
+const CustomBarChart: React.FC<CustomBarChartProps> = ({ chartData }) => {
+  const data = chartData?.length
+    ? chartData
+    : [
+        { month: "Jan", income: 0, expenses: 0 },
+        { month: "Feb", income: 0, expenses: 0 },
+        { month: "Mar", income: 0, expenses: 0 },
+      ];
+
   return (
     <div className="flex w-full">
       <Card className="bg-black/25 w-full">
         <CardHeader>
-          <CardTitle className="text-lg">Income/Expenses</CardTitle>
+          <CardTitle className="text-lg">Ganhos/Gastos</CardTitle>
         </CardHeader>
         <CardContent>
-          <div>
-            <ChartContainer config={chartConfig} className="max-h-60 w-full ">
-              <BarChart accessibilityLayer data={chartData}>
-                <CartesianGrid vertical={false} />
-                <XAxis
-                  dataKey="month"
-                  tickLine={false}
-                  tickMargin={10}
-                  axisLine={false}
-                  tickFormatter={(value) => value.slice(0, 3)}
-                  tick={{ fontSize: 15 }}
-                />
-                <YAxis axisLine={false} tickLine={false} width={25} />
-                <ChartTooltip content={<ChartTooltipContent />} />
-                <Bar dataKey="income" fill="var(--color-income)" radius={4} />
-                <Bar
-                  dataKey="expenses"
-                  fill="var(--color-expenses)"
-                  radius={4}
-                />
-              </BarChart>
-            </ChartContainer>
-          </div>
+          <ChartContainer config={chartConfig} className="max-h-60 w-full">
+            <BarChart accessibilityLayer data={data}>
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="month"
+                tickLine={false}
+                tickMargin={10}
+                axisLine={false}
+                tickFormatter={(value) => value.slice(0, 3)}
+                tick={{ fontSize: 15 }}
+              />
+              <YAxis axisLine={false} tickLine={false} width={25} />
+              <ChartTooltip content={<ChartTooltipContent />} />
+              <Bar dataKey="income" fill="var(--color-income)" radius={4} />
+              <Bar dataKey="expenses" fill="var(--color-expenses)" radius={4} />
+            </BarChart>
+          </ChartContainer>
         </CardContent>
       </Card>
     </div>
   );
 };
+
 export default CustomBarChart;

@@ -21,8 +21,22 @@ export async function createIncome(data: IncomeInput) {
 }
 
 export async function getUserIncomes(userId: string) {
+  const now = new Date();
+  const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const firstDayOfNextMonth = new Date(
+    now.getFullYear(),
+    now.getMonth() + 1,
+    1,
+  );
+
   return await prisma.income.findMany({
-    where: { userId },
+    where: {
+      userId,
+      createdAt: {
+        gte: firstDayOfMonth,
+        lt: firstDayOfNextMonth,
+      },
+    },
     orderBy: { createdAt: "desc" },
   });
 }
@@ -31,6 +45,18 @@ export async function deleteIncome(incomeId: string) {
   return await prisma.income.delete({
     where: { id: incomeId },
   });
+}
+
+export async function handleDeleteIncome(formData: FormData): Promise<void> {
+  const incomeId = formData.get("incomeId") as string;
+
+  if (!incomeId) {
+    throw new Error("ID do ganho não informado.");
+  }
+
+  await deleteIncome(incomeId);
+
+  revalidatePath("/income");
 }
 
 export async function handleCreateIncome(formData: FormData) {

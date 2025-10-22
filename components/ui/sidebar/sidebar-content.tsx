@@ -17,10 +17,10 @@ const SidebarContent = () => {
 
   const navigation = [
     { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-    { name: "Income", href: "/income", icon: TrendingUp },
-    { name: "Expenses", href: "/expenses", icon: TrendingDown },
-    { name: "Reports", href: "/reports", icon: BarChart3 },
-    { name: "Settings", href: "/settings", icon: Settings },
+    { name: "Ganhos", href: "/income", icon: TrendingUp },
+    { name: "Gastos", href: "/expenses", icon: TrendingDown },
+    { name: "Relatórios", href: "/reports", icon: BarChart3 },
+    { name: "Configurações", href: "/settings", icon: Settings },
   ];
 
   return (
