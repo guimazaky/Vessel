@@ -2,7 +2,11 @@
 import React, { useState } from "react";
 import { CirclePicker } from "react-color";
 
-const CategoryColorPicker = () => {
+interface ColorPickerProps {
+  name?: string;
+}
+
+const ColorPicker = ({ name }: ColorPickerProps) => {
   const [color, setColor] = useState("#00ff00");
 
   const myColors = [
@@ -28,12 +32,12 @@ const CategoryColorPicker = () => {
 
   return (
     <div>
-      <h2 className="mb-2 font-semibold">Escolha a cor</h2>
-
+      <h2 className="mb-2 ">Escolha a cor</h2>
+      <input type="hidden" name={name} value={color} />
       <CirclePicker
         color={color}
-        onChange={(updatedColor) => setColor(updatedColor.hex)}
         colors={myColors}
+        onChange={(color) => setColor(color.hex)}
       />
 
       <p className="mt-2">
@@ -43,4 +47,4 @@ const CategoryColorPicker = () => {
   );
 };
 
-export default CategoryColorPicker;
+export default ColorPicker;

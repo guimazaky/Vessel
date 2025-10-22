@@ -37,14 +37,15 @@ async function getIncomes({ session }: FormProps) {
     {
       name: "Ganho total",
       value: totalIncome.toFixed(2),
-      label: "+12% this month",
       icon: DollarSign,
+      color: "text-green-500",
     },
     {
       name: "Maior ganho",
       value: biggestIncome.value,
       label: biggestIncome.name,
       icon: ArrowUp,
+      color: "text-green-500",
     },
   ];
 
@@ -54,7 +55,7 @@ async function getIncomes({ session }: FormProps) {
 const frequencyLabels: Record<string, string> = {
   DAILY: "Diário",
   MONTHLY: "Mensal",
-  ANNUAL: "Anual",
+  UNIQUE: "Único",
 };
 
 const Income = async ({ session }: FormProps) => {

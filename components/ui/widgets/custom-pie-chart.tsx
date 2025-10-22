@@ -8,77 +8,65 @@ import {
   CardTitle,
 } from "@/components/ui/shadcn/card";
 import {
-  ChartConfig,
   ChartContainer,
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
+  ChartConfig,
   ChartTooltipContent,
 } from "@/components/ui/shadcn/chart";
-import { Pie, PieChart, Sector } from "recharts";
-import { PieSectorDataItem } from "recharts/types/polar/Pie";
+import { Pie, PieChart } from "recharts";
 
-const chartData = [
-  { category: "1", percentage: 61, fill: "var(--color-1)" },
-  { category: "2", percentage: 19, fill: "var(--color-2)" },
-  { category: "3", percentage: 12, fill: "var(--color-3)" },
-  { category: "4", percentage: 8, fill: "var(--color-4)" },
-];
-const chartConfig = {
-  visitors: {
-    label: "Visitors",
-  },
-  1: {
-    label: "Housing",
-    color: "#3b82f6",
-  },
-  2: {
-    label: "Food & Dining",
-    color: "#22c55e",
-  },
-  3: {
-    label: "Transportation",
-    color: "#eab308",
-  },
-  4: {
-    label: "Entertainment",
-    color: "#ef4444",
-  },
-} satisfies ChartConfig;
+interface CustomPieChartProps {
+  data: { category: string; percentage: number; fill: string }[];
+  config: ChartConfig;
+}
 
-const CustomPieChart = () => {
+const CustomPieChart = ({ data, config }: CustomPieChartProps) => {
+  const chartData =
+    data?.length && data.length > 0
+      ? data
+      : [{ category: "Sem dados", percentage: 100, fill: "#8884d8" }];
+
   return (
-    <div className="flex w-full ">
+    <div className="flex w-full">
       <Card className="bg-black/25 w-full">
         <CardHeader>
-          <CardTitle className="text-lg">Expenses categories</CardTitle>
+          <CardTitle className="text-lg">Gastos por Categoria</CardTitle>
         </CardHeader>
         <CardContent>
-          <div>
-            <ChartContainer
-              config={chartConfig}
-              className="mx-auto aspect-square max-h-60 w-full"
-            >
-              <PieChart>
-                <ChartTooltip
-                  cursor={false}
-                  content={<ChartTooltipContent hideLabel />}
-                />
-                <Pie
-                  data={chartData}
-                  dataKey="percentage"
-                  nameKey="category"
-                  innerRadius={40}
-                  strokeWidth={10}
-                  activeIndex={0}
-                />
-                <ChartLegend
-                  content={<ChartLegendContent nameKey="category" />}
-                  className="-translate-y-2 flex-wrap gap-2 *:basis-1/4 *:justify-center"
-                />
-              </PieChart>
-            </ChartContainer>
-          </div>
+          <ChartContainer
+            config={config}
+            className="mx-auto aspect-square max-h-60 w-full"
+          >
+            <PieChart>
+              <ChartTooltip
+                cursor={false}
+                content={({ active, payload }) => {
+                  if (!active || !payload?.length) return null;
+
+                  const item = payload[0];
+
+                  return (
+                    <div className="bg-black/60 rounded-lg px-2 py-1 text-xs text-white">
+                      {item.payload.category}: {Math.round(Number(item.value))}%
+                    </div>
+                  );
+                }}
+              />
+              <Pie
+                data={chartData}
+                dataKey="percentage"
+                nameKey="category"
+                innerRadius={40}
+                strokeWidth={10}
+              />
+              <ChartLegend
+                content={<ChartLegendContent />}
+                className="-translate-y-2 flex-wrap gap-2 *:basis-1/4 *:justify-center"
+              />
+            </PieChart>
+          </ChartContainer>
         </CardContent>
       </Card>
     </div>

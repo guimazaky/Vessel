@@ -11,7 +11,7 @@ const SidebarHeader = () => {
         <div className="flex flex-col">
           <h1 className="text-xl ">Vessel</h1>
           <span className="text-sm font-thin text-white/50">
-            Finances control
+            Controle financeiro
           </span>
         </div>
       </div>

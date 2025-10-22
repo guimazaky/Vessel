@@ -12,8 +12,8 @@ const Page = async () => {
 
   return (
     <div className="flex w-full">
-      <AppSidebar />
-      <Expenses />
+      <AppSidebar session={session} />
+      <Expenses session={session} />
     </div>
   );
 };

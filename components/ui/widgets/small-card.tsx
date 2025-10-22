@@ -6,6 +6,7 @@ interface IncomeItem {
   value: number | string;
   label?: string;
   icon: LucideIcon;
+  color?: string;
 }
 
 interface CardProps {
@@ -17,13 +18,15 @@ const SmallCard = ({ label }: CardProps) => {
     <div className="flex w-full gap-4 ">
       {label.map((item) => (
         <div
-          className="flex justify-between items-center gap-6 bg-black/25 p-4 rounded-lg border border-white/15 w-full"
+          className="flex justify-between items-center gap-6 bg-black/25 p-4 rounded-lg border border-white/15 w-full "
           key={item.name}
         >
           <div className="flex">
             <div>
               <span className="text-sm text-white/50">{item.name}</span>
-              <h1 className="text-lg font-bold">R$ {item.value}</h1>
+              <h1 className={`text-xl font-bold ${item.color}`}>
+                R$ {item.value}
+              </h1>
               <span className="text-sm text-white/50">{item.label}</span>
             </div>
           </div>

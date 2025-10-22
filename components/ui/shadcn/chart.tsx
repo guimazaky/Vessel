@@ -231,12 +231,12 @@ function ChartTooltipContent({
                       <div className="grid gap-1.5 ">
                         {nestLabel ? tooltipLabel : null}
                         <span className="text-white">
-                          {itemConfig?.label || item.name}
+                          {itemConfig?.label || item.name}:{" "}
                         </span>
                       </div>
-                      {item.value && (
+                      {item.value !== undefined && (
                         <span className="text-white font-mono font-medium tabular-nums">
-                          {item.value.toLocaleString()}
+                          {Math.round(Number(item.value))}
                         </span>
                       )}
                     </div>

@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/shadcn/input";
 import { Label } from "@/components/ui/shadcn/label";
 import React, { useState } from "react";
 import { signUp } from "@/lib/actions/auth-actions";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { auth } from "@/lib/auth";
 
 type Session = typeof auth.$Infer.Session;
@@ -17,6 +17,7 @@ interface FormProps extends React.ComponentProps<"div"> {
 }
 
 export function RegisterForm({ className, session, ...props }: FormProps) {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -32,7 +33,7 @@ export function RegisterForm({ className, session, ...props }: FormProps) {
       if (!result.user) {
         setError("Erro ao criar conta");
       } else {
-        redirect("/login");
+        router.push("/dashboard");
       }
     } catch (err: unknown) {
       if (err instanceof Error) setError(err.message);
